@@ -1,4 +1,3 @@
-import { db } from "@/app/_firebase/firebase";
 import AvatarImages from "@/components/AvatarSlider/AvatarSlider";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,8 +17,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserAuthenticated } from "@/hooks/useUserAuthenticated";
+import {
+  useFetchLoginedUserDetails,
+  useUpdateUserDetails,
+} from "@/services/QueryServices";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { SquarePen, X } from "lucide-react";
 import React, { SetStateAction } from "react";
 import { useForm } from "react-hook-form";
@@ -35,68 +37,50 @@ const ProfileUpdate = ({
 }) => {
   const { userInfo } = useUserAuthenticated();
   const [sliderShown, setSliderShown] = React.useState(false);
-  const [updateProfile, setUpdateProfile] = React.useState({
-    image: "",
-    username: "",
-    description: "",
-  });
 
-  React.useEffect(() => {
-    const fetchDetails = async () => {
-      try {
-        if (!userInfo?.currentUserId) return;
-        const getUserDetailsFromDb = doc(db, "users", userInfo.currentUserId);
-        const getUser = await getDoc(getUserDetailsFromDb);
-        if (getUser.exists()) {
-          const data = getUser.data();
-          setUpdateProfile({
-            image: data.photoURL || "",
-            username: data.displayName || "",
-            description: data.description || "",
-          });
-          form.setValue("avatar", data.photoURL || "");
-          form.setValue("username", data.displayName || "");
-          form.setValue("description", data.description || "");
-        }
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    fetchDetails();
-  }, [userInfo?.currentUserId]);
+  const { data } = useFetchLoginedUserDetails();
+  const mutation = useUpdateUserDetails();
 
   const updateProfileSchema = z.object({
-    avatar: z.string().min(1, { message: "Avatar is required" }),
-    username: z.string().min(1, { message: "Name is required" }),
+    photoURL: z.string().min(1, { message: "Avatar is required" }),
+    displayName: z.string().min(1, { message: "Name is required" }),
     description: z.string().min(1, { message: "Description is required" }),
   });
 
   const form = useForm({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      avatar: "",
-      username: "",
+      photoURL: "",
+      displayName: "",
       description: "",
     },
   });
-  const { handleSubmit, control, setValue } = form;
 
-  const updateProfileSubmit = async (values: any) => {
+  const { handleSubmit, control, setValue, watch } = form;
+
+  // Update form values when user data loads
+  React.useEffect(() => {
+    if (!data) return;
+    setValue("photoURL", data.photoURL || "");
+    setValue("displayName", data.displayName || "");
+    setValue("description", data.description || "");
+  }, [data, setValue]);
+
+  // Watch photoURL to show image preview
+  const photoURL = watch("photoURL");
+
+  const updateProfileSubmit = async (values: Partial<UserData>) => {
     if (!userInfo?.currentUserId) return;
-    const updateProfileOfUser = doc(db, "users", userInfo?.currentUserId);
+
     try {
-      await updateDoc(updateProfileOfUser, {
-        photoURL: values.avatar,
-        displayName: values.username,
-        description: values.description,
-      });
-      console.log("form is submitted");
+      await mutation.mutateAsync(values);
       setModalOpen(false);
-      toast.success("profile is updated");
+      toast.success("Profile is updated");
     } catch (error) {
-      console.error("Update failed", error);
+      toast.error("Update failed");
     }
   };
+
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogContent className="rounded-3xl">
@@ -111,9 +95,9 @@ const ProfileUpdate = ({
           >
             <div className="flex flex-col items-center justify-center space-y-10">
               <div className="relative">
-                {updateProfile.image ? (
+                {photoURL ? (
                   <img
-                    src={updateProfile.image}
+                    src={photoURL}
                     alt="user-image"
                     className="w-40 h-40 rounded-full object-cover"
                   />
@@ -136,16 +120,18 @@ const ProfileUpdate = ({
               </div>
               {sliderShown && <AvatarImages setValue={setValue} />}
             </div>
+
             <div className="space-y-3">
               <FormField
                 control={control}
-                name="username"
+                name="displayName"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
                       <Input
                         type="text"
                         placeholder="Type your name"
+                        autoFocus={false}
                         className="shadow-none h-12 focus:!ring-0 rounded-full capitalize"
                         {...field}
                       />
@@ -171,6 +157,7 @@ const ProfileUpdate = ({
                 )}
               />
             </div>
+
             <Button type="submit" className="rounded-full h-12">
               Update
             </Button>

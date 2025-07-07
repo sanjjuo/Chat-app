@@ -3,7 +3,7 @@ import { useUserAuthenticated } from "@/hooks/useUserAuthenticated";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 
-const UsersChatMessageList = ({ users }: { users: UserMessages[] }) => {
+const UsersChatMessageList = ({ users }: { users: UserMessagesList[] }) => {
   const pathname = usePathname();
   const router = useRouter();
   const { userInfo } = useUserAuthenticated();
