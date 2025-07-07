@@ -6,15 +6,16 @@ import Navbar from "@/components/common/Navbars/Navbar";
 import React from "react";
 import ReactQueryProvider from "./provider";
 
-const kanitFont = Outfit({
+const OutfitFont = Outfit({
   variable: "--font-Outfit",
-  // subsets: ["latin"],
+  subsets: ["latin"],
   weight: ["400", "600", "700"],
 });
 
-const LogoFont = Chango({
+const ChangoFont = Chango({
   variable: "--font-logo",
   weight: ["400"],
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -30,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${kanitFont.variable} ${kanitFont.className} ${LogoFont.variable} bg-app-secondary`}
+        className={`${OutfitFont.variable} ${OutfitFont.className} ${ChangoFont.variable} bg-app-secondary`}
       >
         <ReactQueryProvider>
           <Navbar />
