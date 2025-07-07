@@ -2,17 +2,23 @@
 import { useUserAuthenticated } from "@/hooks/useUserAuthenticated";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
+import React from "react";
 
 const UsersChatMessageList = ({ users }: { users: UserMessagesList[] }) => {
   const pathname = usePathname();
   const router = useRouter();
   const { userInfo } = useUserAuthenticated();
   const usersList = users.filter((usr) => usr.uid !== userInfo?.currentUserId);
+  // const [firstUser, setFirstUser] = React.useState(usersList);
 
   console.log(users);
 
   const handleSelectUser = (uid: string) => {
     router.push(`/chat-interface/${uid}`);
+    // setFirstUser((prevUsers) => {
+    //   const newUsers = [firstUser, ...prevUsers.filter((i) => i !== firstUser)];
+    //   return newUsers;
+    // });
   };
 
   return (

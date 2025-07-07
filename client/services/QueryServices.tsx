@@ -1,6 +1,6 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchUserDetails, updateUserDetails } from "./ApiServices";
+import { addUsers, fetchUserDetails, updateUserDetails } from "./ApiServices";
 import { useUserAuthenticated } from "@/hooks/useUserAuthenticated";
 
 export const useFetchLoginedUserDetails = () => {
@@ -41,5 +41,17 @@ export const useUpdateUserDetails = () => {
         queryKey: ["user-details", userId],
       });
     },
+  });
+};
+
+export const useAddUser = () => {
+  return useMutation({
+    mutationFn: ({
+      currentUserId,
+      targetUser,
+    }: {
+      currentUserId: string;
+      targetUser: UserMessagesList;
+    }) => addUsers(currentUserId, targetUser),
   });
 };

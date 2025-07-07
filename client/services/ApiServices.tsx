@@ -1,5 +1,5 @@
 import { db } from "@/app/_firebase/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 export const fetchUserDetails = async (userId: string) => {
   const getUserDetails = doc(db, "users", userId);
@@ -16,4 +16,12 @@ export const updateUserDetails = async (
 ) => {
   const getUserDetails = doc(db, "users", userId);
   await updateDoc(getUserDetails, userDetails);
+};
+
+export const addUsers = async (
+  currentUserId: string,
+  targetUser: UserMessagesList
+) => {
+  const docRef = doc(db, "users", currentUserId, "usersForChat", targetUser.uid);
+  await setDoc(docRef, targetUser);
 };
