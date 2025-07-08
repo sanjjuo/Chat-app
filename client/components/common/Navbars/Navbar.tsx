@@ -6,7 +6,7 @@ import { navbarContents } from "./data";
 
 const Navbar = () => {
   return (
-    <div className="sticky top-0 flex items-center justify-between bg-app-secondary h-24 app-width z-50 w-full px-5 md:p-0">
+    <div className="sticky top-0 flex items-center justify-between bg-app-secondary h-14 lg:h-24 h z-50 w-full px-5 md:p-0">
       <LogoText placement="app-logo" />
       <div className="hidden lg:flex items-center gap-40">
         <ul className="flex items-center gap-10">

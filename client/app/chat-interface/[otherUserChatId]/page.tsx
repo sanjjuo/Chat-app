@@ -10,14 +10,14 @@ const Chat_Dynamic_Interface_Page = async ({
 }) => {
   const { otherUserChatId } = await params;
   return (
-    <div className="grid grid-cols-12 grid-rows-10 gap-x-5 h-[80vh]">
-      <div className="col-span-3 row-span-10 overflow-y-auto scrollbar-none">
+    <div className="grid grid-cols-1 lg:grid-cols-12 grid-rows-10 gap-x-5 h-[80vh]">
+      <div className="lg:col-span-3 row-span-10 overflow-y-auto scrollbar-none">
         <LeftSideComponent />
       </div>
-      <div className="col-span-6 row-span-10">
+      <div className="lg:col-span-6 row-span-10">
         <ChattingSection otherUserChatId={otherUserChatId} />
       </div>
-      <div className="col-span-3 row-span-10 overflow-y-auto scrollbar-none">
+      <div className="lg:col-span-3 row-span-10 overflow-y-auto scrollbar-none">
         <RightSideComponent otherUserChatId={otherUserChatId} />
       </div>
     </div>

@@ -7,19 +7,28 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { AlignRight } from "lucide-react";
 
 const MobileNavbar = () => {
   return (
     <Sheet>
-      <SheetTrigger>Open</SheetTrigger>
+      <SheetTrigger>
+        <AlignRight />
+      </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Are you absolutely sure?</SheetTitle>
-          <SheetDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </SheetDescription>
+          <SheetTitle hidden />
+          <SheetDescription hidden />
         </SheetHeader>
+        <div className="mt-20">
+          <ul className="text-lg space-y-10">
+            <li>Home</li>
+            <li>Chat</li>
+            <li>Contacts</li>
+            <li>Settings</li>
+            <li>FAQs</li>
+          </ul>
+        </div>
       </SheetContent>
     </Sheet>
   );

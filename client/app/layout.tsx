@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Chango, Outfit } from "next/font/google";
+import React from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
-import Navbar from "@/components/common/Navbars/Navbar";
-import React from "react";
 import ReactQueryProvider from "./provider";
 
 const OutfitFont = Outfit({
@@ -34,8 +33,7 @@ export default function RootLayout({
         className={`${OutfitFont.variable} ${OutfitFont.className} ${ChangoFont.variable} bg-app-secondary`}
       >
         <ReactQueryProvider>
-          <Navbar />
-          <div className="app-width">{children}</div>
+          <div>{children}</div>
           <Toaster />
         </ReactQueryProvider>
       </body>
